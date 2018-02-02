@@ -11,8 +11,8 @@
 #include <ArduinoArcherPanelClient.h>
 #include <WebSocketClient.h>
 
-char ssid[] = "WLAN-DH5Z5K";     //  your network SSID (name)
-char pass[] = "0273049708775568";  // your network password
+char ssid[] = "xxx";     //  your network SSID (name)
+char pass[] = "xxx";  // your network password
 
 char serverAddress[] = "wsbridge.archer.graphics"; // archer panel websocket endpoint url
 int port = 80; // archer panel websocket endpoint port
