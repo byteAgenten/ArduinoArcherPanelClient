@@ -5,11 +5,10 @@
 
 class SetVariableCommand : public PanelCommand {
 
-
     public:
         SetVariableCommand(const char* iPanelId, const char* iVariableKey, const char* iVariableValue, const char* iVariableDisplayValue);
         virtual String toJson();
-        const char* type = "VARIABLE_CHANGED";
+        static const char* type;
     private:
         const char* iPanelId;
         const char* iVariableKey;

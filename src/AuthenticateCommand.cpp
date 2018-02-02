@@ -1,6 +1,7 @@
 #include "AuthenticateCommand.h"
 #include <Arduino.h>
 
+const char* AuthenticateCommand::type = "AUTHENTICATE_REQUEST";
 
 AuthenticateCommand::AuthenticateCommand(const char* accessKeyId, const char* accessKey) : PanelCommand(), iAccessKeyId(accessKeyId), iAccessKey(accessKey) {
    

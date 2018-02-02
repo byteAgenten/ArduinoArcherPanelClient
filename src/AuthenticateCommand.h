@@ -9,7 +9,7 @@ class AuthenticateCommand : public PanelCommand {
     public:
         AuthenticateCommand(const char* accessKeyId, const char* accessKey);
         virtual String toJson();
-        const char* type = "AUTHENTICATE_REQUEST";
+        static const char* type;
     private:
         const char* iAccessKeyId;
         const char* iAccessKey;

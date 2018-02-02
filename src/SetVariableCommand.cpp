@@ -1,7 +1,7 @@
 #include "SetVariableCommand.h"
 #include <Arduino.h>
 
-
+const char* SetVariableCommand::type = "VARIABLE_CHANGED";
         
 SetVariableCommand::SetVariableCommand(const char* panelId, const char* variableKey, const char* variableValue, const char* variableDisplayValue) : PanelCommand(), iPanelId(panelId), iVariableKey(variableKey), iVariableValue(variableValue), iVariableDisplayValue(variableDisplayValue)  {
    
