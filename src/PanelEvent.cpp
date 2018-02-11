@@ -9,6 +9,11 @@ PanelEvent::PanelEvent() {
    
 }
 
+bool PanelEvent::isTypeOf(const char* type) {
+
+    return strcmp(this->getType(), type) == 0;
+}
+
 void PanelEvent::writeJsonTokensToArray(String json, const char** eventTokens) {
 
     int tokenCount = 0;
