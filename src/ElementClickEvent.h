@@ -1,6 +1,5 @@
-// Library to connect to archer.graphics panel
-// (c) Copyright byteAgenten gmbh. 2018
-// Released under Apache License, version 2.0
+// Copyright (c) 2018 byteAgenten gmbh, germany. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 #ifndef ElementClickEvent_H
 #define ElementClickEvent_H
@@ -8,7 +7,6 @@
 #include "PanelEvent.h"
 
 class ElementClickEvent : public PanelEvent {
-
 
     public:
         ElementClickEvent(const char* panelId, const char* elementId);
