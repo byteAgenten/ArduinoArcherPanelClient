@@ -24,6 +24,7 @@ UserValueInputEvent KEYWORD1
 toJson  KEYWORD2
 jsonToEvent KEYWORD2
 isAuthenticated KEYWORD2
+isTypeOf    KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
