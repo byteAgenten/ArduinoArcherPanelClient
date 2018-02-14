@@ -4,16 +4,17 @@
 #include "AuthenticateCommand.h"
 #include <Arduino.h>
 
-const char* AuthenticateCommand::type = "AUTHENTICATE_REQUEST";
+const char *AuthenticateCommand::type = "AUTHENTICATE_REQUEST";
 
-AuthenticateCommand::AuthenticateCommand(const char* accessKeyId, const char* accessKey) : PanelCommand(), iAccessKeyId(accessKeyId), iAccessKey(accessKey) {
-   
+AuthenticateCommand::AuthenticateCommand(const char *accessKeyId, const char *accessKey)
+        : PanelCommand(), iAccessKeyId(accessKeyId), iAccessKey(accessKey) {
+
 }
 
 
 String AuthenticateCommand::toJson() {
 
-    const char* requestValues[5];
+    const char *requestValues[5];
     requestValues[0] = type;
     requestValues[1] = "1";
     requestValues[2] = iAccessKeyId;
@@ -22,5 +23,5 @@ String AuthenticateCommand::toJson() {
     String json = PanelCommand::arrayToJson(requestValues, 5);
     //Serial.println(json);
 
-    return json; 
+    return json;
 }
