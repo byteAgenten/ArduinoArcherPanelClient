@@ -102,6 +102,82 @@ void setup() {
     connectArcherCloud();
 }
 
+void loop() {
+
+    //Calculate elapsed time (seconds) since previous loop() execution
+    int currentMillis = millis();
+    float deltaSeconds = ((float) currentMillis - (float) lastMillis) / 1000.0;
+
+    //Check if the cabin is currently moving
+    if (moving) {
+
+        //Calculate the moved distance (meter) since the last loop() execution
+        float distanceMoved = deltaSeconds * ELEVATOR_SPEED;
+
+        //Calculate the current height position of the cabin
+        currentHeight = lastHeight + (moveUp ? 1 : -1) * distanceMoved;
+
+        //Check whether the next selected floor is reached
+        if (hasNextSelectedFloorReached()) {
+
+            //Handle floor reached
+            floorReached(nextFloorIndex);
+
+        } else {
+
+            //Calculate the floor which the cabin is currently passing
+            int floorIndex = round(currentHeight / FLOOR_HEIGHT);
+
+            //If the floor is different to the floor at the last loop() execution
+            if (floorIndex != currentFloorIndex) {
+
+                //Update the current floor to the new floor index
+                currentFloorIndex = floorIndex;
+
+                //Send the current floor index as value of the 'curfloor' variable to the Archer panel.
+                String currentFloorValue(floorIndex - 1);
+                SetVariableCommand setVariableCommand(PANEL_ID, "curfloor", currentFloorValue.c_str(),
+                                                      currentFloorValue.c_str());
+                sendWS(setVariableCommand);
+            }
+        }
+
+        //update the cabin position
+        updateCabPos();
+
+        //store the current height for the next loop() execution
+        lastHeight = currentHeight;
+
+    } else {
+
+
+        if (millis() < doorOpenStartMillis + DOOR_OPEN_TIME * 1000) {
+
+            //Do nothing, just wait 2 seconds
+
+        } else {
+
+            //Check for another selected floor and start moving if there is one.
+            if (!moving) {
+                nextFloorIndex = getNextSelectedFloor();
+                setMoving(nextFloorIndex >= 0);
+            }
+
+        }
+
+    }
+
+    //store the current millis for the use in the next loop() execution
+    lastMillis = currentMillis;
+
+    //Check for available events from the Archer panel
+    readWS();
+
+    //Wait for 200ms
+    delay(200);
+}
+
+
 /**
  * Callback function(s) for the interrupt pin(s)
  */
@@ -225,80 +301,7 @@ void handleElementClickEvent(ElementClickEvent *event) {
 }
 
 
-void loop() {
 
-    //Calculate elapsed time (seconds) since previous loop() execution
-    int currentMillis = millis();
-    float deltaSeconds = ((float) currentMillis - (float) lastMillis) / 1000.0;
-
-    //Check if the cabin is currently moving
-    if (moving) {
-
-        //Calculate the moved distance (meter) since the last loop() execution
-        float distanceMoved = deltaSeconds * ELEVATOR_SPEED;
-
-        //Calculate the current height position of the cabin
-        currentHeight = lastHeight + (moveUp ? 1 : -1) * distanceMoved;
-
-        //Check whether the next selected floor is reached
-        if (hasNextSelectedFloorReached()) {
-
-            //Handle floor reached
-            floorReached(nextFloorIndex);
-
-        } else {
-
-            //Calculate the floor which the cabin is currently passing
-            int floorIndex = round(currentHeight / FLOOR_HEIGHT);
-
-            //If the floor is different to the floor at the last loop() execution
-            if (floorIndex != currentFloorIndex) {
-
-                //Update the current floor to the new floor index
-                currentFloorIndex = floorIndex;
-
-                //Send the current floor index as value of the 'curfloor' variable to the Archer panel.
-                String currentFloorValue(floorIndex - 1);
-                SetVariableCommand setVariableCommand(PANEL_ID, "curfloor", currentFloorValue.c_str(),
-                                                      currentFloorValue.c_str());
-                sendWS(setVariableCommand);
-            }
-        }
-
-        //update the cabin position
-        updateCabPos();
-
-        //store the current height for the next loop() execution
-        lastHeight = currentHeight;
-
-    } else {
-
-
-        if (millis() < doorOpenStartMillis + DOOR_OPEN_TIME * 1000) {
-
-            //Do nothing, just wait 2 seconds
-
-        } else {
-
-            //Check for another selected floor and start moving if there is one.
-            if (!moving) {
-                nextFloorIndex = getNextSelectedFloor();
-                setMoving(nextFloorIndex >= 0);
-            }
-
-        }
-
-    }
-
-    //store the current millis for the use in the next loop() execution
-    lastMillis = currentMillis;
-
-    //Check for available events from the Archer panel
-    readWS();
-
-    //Wait for 200ms
-    delay(200);
-}
 
 
 /**
