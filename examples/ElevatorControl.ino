@@ -1,13 +1,11 @@
 // Copyright (c) 2018 byteAgenten gmbh, germany. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-/**
- * This example is a very basic simulation of an elevator control logic
- * To use this example you need to register (for free) to the archer cloud at https://cloud.archer.graphics/host
- * Please read our archer cloud documentation to understand the archer cloud concepts
- * at https://wiki.archer.graphics/display/ARCHER/Archer+Cloud
- * You can download the used archer.graphics project from http://archer.graphics/submenu/resources
- */
+//This example is a very basic simulation of an elevator control logic
+//To use this example you need to register (for free) to the Archer Cloud at https://cloud.archer.graphics/host
+//Please read our Archer Cloud documentation to understand the Archer Cloud
+//concepts at https://wiki.archer.graphics/display/ARCHER/Archer+Cloud
+//You can download the used archer.graphics project from http://archer.graphics/submenu/resources/
 
 #include <WiFi101.h>
 #include <WebSocketClient.h>
@@ -27,14 +25,14 @@ const float ELEVATOR_SPEED = 2; // 2 meter/seconds
 
 Floor floors[FLOOR_COUNT];
 
-const char PANEL_ID[] = "******"; //replace with your panel id
-const char ACCESS_KEY_ID[] = "******"; //replace with your access key id
-const char ACCESS_KEY[] = "********-****-****-****-************"; //replace with your acccess key
+const char PANEL_ID[] = "******"; //replace with your Archer Cloud panel id
+const char ACCESS_KEY_ID[] = "******"; //replace with your Archer Cloud access key id
+const char ACCESS_KEY[] = "********-****-****-****-************"; //replace with your Archer Cloud acccess key
 
 const char SSID[] = "*********"; //replace with your WLAN name
 const char WAP[] = "***************"; //replace with your WLAN password
 
-const char WS_URL[] = "wsbridge.archer.graphics";   //url to the archer cloud panel websocket endpoint
+const char WS_URL[] = "wsbridge.archer.graphics";   //url to the Archer Cloud panel websocket endpoint
 const int WS_PORT = 80; //port of the websocket endpoint
 
 
@@ -43,7 +41,7 @@ int nextFloorIndex = 0;
 int lastFloorIndex = 0;
 int currentFloorIndex = 0;
 boolean moving = false; //indicates that the elevator is moving
-bool isAuthenticated = false;   //the status of the archer panel authentication
+bool isAuthenticated = false;   //the status of the Archer panel authentication
 long lastMillis = 0;    //stores the time from the previous loop() execution.
 float lastHeight = 0;   //stores the last height position of the elevator from the previous loop() execution.
 float currentHeight = 0;    //the current height position of the elevator
@@ -100,7 +98,7 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(floors[4].interruptPin), floor4, RISING);
     attachInterrupt(digitalPinToInterrupt(floors[5].interruptPin), floor5, RISING);
 
-    //Connect to the archer cloud
+    //Connect to the Archer Cloud
     connectArcherCloud();
 }
 
@@ -135,7 +133,7 @@ void connectArcherCloud() {
 }
 
 /**
- * Generic function for sending commands via websocket to the archer cloud
+ * Generic function for sending commands via websocket to the Archer Cloud
  */
 void sendWS(PanelCommand &command) {
 
@@ -146,14 +144,14 @@ void sendWS(PanelCommand &command) {
 }
 
 /**
- * Generic function for reading archer panel events from the websocket
+ * Generic function for reading Archer panel events from the websocket
  */
 void readWS() {
 
     //check if data available at the websocket
     if (wsClient.parseMessage() > 0) {
 
-        //read the data from the websocket. Data send from archer cloud are in JSON format.
+        //read the data from the websocket. Data send from Archer Cloud are in JSON format.
         String json = wsClient.readString();
 
         //create a panel event instance from the received websocket message.
@@ -259,7 +257,7 @@ void loop() {
                 //Update the current floor to the new floor index
                 currentFloorIndex = floorIndex;
 
-                //Send the current floor index as value of the 'curfloor' variable to the archer panel.
+                //Send the current floor index as value of the 'curfloor' variable to the Archer panel.
                 String currentFloorValue(floorIndex - 1);
                 SetVariableCommand setVariableCommand(PANEL_ID, "curfloor", currentFloorValue.c_str(),
                                                       currentFloorValue.c_str());
@@ -278,7 +276,7 @@ void loop() {
 
         if (millis() < doorOpenStartMillis + DOOR_OPEN_TIME * 1000) {
 
-            //Just wait 2 seconds
+            //Do nothing, just wait 2 seconds
 
         } else {
 
@@ -295,7 +293,7 @@ void loop() {
     //store the current millis for the use in the next loop() execution
     lastMillis = currentMillis;
 
-    //Check for available events from the archer panel
+    //Check for available events from the Archer panel
     readWS();
 
     //Wait for 200ms
@@ -333,7 +331,7 @@ void setMoveUp(boolean value) {
     //Build the panel variable value
     String movementValue(moveUp ? "up" : "down");
 
-    //Send the new value for the 'movement' variable to the archer panel.
+    //Send the new value for the 'movement' variable to the Archer panel.
     SetVariableCommand setVariableCommand(PANEL_ID, "movement", movementValue.c_str(), movementValue.c_str());
     sendWS(setVariableCommand);
 }
@@ -421,7 +419,7 @@ void updateCabPos() {
     //Calculate the variable value for the panel
     String cabinPosValue(currentHeight / ((FLOOR_COUNT - 1) * FLOOR_HEIGHT) * 500);
 
-    //Send the calculated value for the 'cabpos' variable to the archer panel.
+    //Send the calculated value for the 'cabpos' variable to the Archer panel.
     SetVariableCommand setVariableCommand(PANEL_ID, "cabpos", cabinPosValue.c_str(), cabinPosValue.c_str());
     sendWS(setVariableCommand);
 }
@@ -449,7 +447,7 @@ void floorReached(int floorIndex) {
     //switch off the floor led
     digitalWrite(floors[lastFloorIndex].ledPin, LOW);
 
-    //Update the button state of the reached floor to 'current' within the archer panel graphic
+    //Update the button state of the reached floor to 'current' within the Archer panel graphic
     setButtonState(floorIndex, (char *) "current");
 }
 
@@ -465,7 +463,7 @@ void selectFloor(int floorIndex) {
     floors[floorIndex].selected = true;
     digitalWrite(floors[floorIndex].ledPin, HIGH);
 
-    //Update the button state to 'selected' within the archer panel graphic
+    //Update the button state to 'selected' within the Archer panel graphic
     setButtonState(floorIndex, (char *) "selected");
 }
 
@@ -478,7 +476,7 @@ void setButtonState(int floorIndex, char *state) {
     String variable = String("button-state-");
     variable.concat(floorIndex);
 
-    //Send the state value for the associated variable to the archer panel.
+    //Send the state value for the associated variable to the Archer panel.
     SetVariableCommand setVariableCommand(PANEL_ID, variable.c_str(), state, state);
     sendWS(setVariableCommand);
 }
